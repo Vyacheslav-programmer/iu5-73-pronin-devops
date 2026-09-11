@@ -1,5 +1,5 @@
 """Тесты для server.py."""
-from server import hello, add
+from server import add, hello
 
 
 def test_hello():
