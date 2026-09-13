@@ -10,3 +10,28 @@
 ## Описание
 
 В этом репозитории выполняются задания по модулю 1 «Работа с исходным кодом».
+
+**Вариант 15:** Проектирование GitHub Actions workflow.
+
+## Структура проекта
+
+- `README.md` — описание проекта
+- `server.py` — пример Python-приложения
+- `requirements.txt` — основные зависимости
+- `requirements-dev.txt` — зависимости для разработки
+- `pyproject.toml` — настройки pytest
+- `conftest.py` — настройка sys.path для тестов
+- `tests/test_server.py` — тесты
+- `.github/workflows/ci.yml` — CI/CD пайплайн для GitHub Actions
+
+## CI/CD
+
+Проект использует GitHub Actions для автоматической проверки кода.
+
+Пайплайн запускается при `push` и `pull_request` в ветку `main` и выполняет:
+1. Checkout — клонирование репозитория
+2. Setup Python — установка Python 3.11
+3. Install dependencies — установка зависимостей
+4. Compilation Check — синтаксическая проверка
+5. Linting — проверка через ruff
+6. Tests — запуск pytest
