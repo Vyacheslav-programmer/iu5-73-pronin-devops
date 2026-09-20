@@ -1,14 +1,9 @@
 pipeline {
     agent any
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     environment {
         PYTHON = 'python3'
-        PIP_DISABLE_PIP_VERSION_CHECK = '1'
+        TMPDIR = '/root/tmp'
     }
 
     stages {
@@ -17,37 +12,40 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Setup Python') {
             steps {
-                sh '''
-                    ${PYTHON} --version
-                    ${PYTHON} -m pip --version
-                '''
+                sh '${PYTHON} --version'
+                sh '${PYTHON} -m pip --version'
             }
         }
-
         stage('Install dependencies') {
             steps {
                 sh '''
-                    ${PYTHON} -m pip install -r requirements.txt
-                    ${PYTHON} -m pip install -r requirements-dev.txt
+                    mkdir -p ${TMPDIR}
+                    ${PYTHON} -m pip install --cache-dir ${TMPDIR}/pip-cache -r requirements.txt
+                    ${PYTHON} -m pip install --cache-dir ${TMPDIR}/pip-cache -r requirements-dev.txt
                 '''
             }
         }
-
         stage('Compilation Check') {
             steps {
-                sh '${PYTHON} -m compileall server.py'
+                sh """
+                    ${PYTHON} -m py_compile server.py
+                    ${PYTHON} -m py_compile voicegen.py
+                    ${PYTHON} -m py_compile model_loader.py
+                """
             }
         }
-
         stage('Linting') {
             steps {
                 sh '${PYTHON} -m ruff check .'
             }
         }
-
+        stage('TODO Check') {
+            steps {
+                sh 'bash ci-check.sh'
+            }
+        }
         stage('Tests') {
             steps {
                 sh '${PYTHON} -m pytest tests/ -v --tb=short'
@@ -56,14 +54,11 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Pipeline finished successfully'
-        }
         failure {
-            echo 'Pipeline failed'
+            echo 'Build failed. Check the console output for details.'
         }
-        always {
-            echo "Build ${env.BUILD_NUMBER} completed with status ${currentBuild.currentResult}"
+        success {
+            echo 'Build completed successfully.'
         }
     }
 }
