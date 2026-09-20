@@ -1,6 +1,24 @@
-#!/bin/sh
-# Семинар 2: Git hook — проверка перед коммитом.
-set -e
-python -m compileall server.py
-python -m ruff check .
-echo "pre-commit: compileall + ruff OK"
+#!/bin/bash
+# Pre-commit hook: проверяет staged Python файлы на TODO-комментарии
+
+echo "Pre-commit: проверка staged files..."
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.py$')
+
+if [ -z "$STAGED_FILES" ]; then
+    echo "Нет staged Python файлов, пропускаем проверку"
+    exit 0
+fi
+
+if git diff --cached --unified=0 --no-color | grep -q '^\+.*TODO'; then
+    echo "Найден TODO-комментарий в staged файлах!"
+    echo ""
+    echo "Найдено в:"
+    git diff --cached --name-only --diff-filter=ACM | grep -E '\.py$'
+    echo ""
+    echo "Удалите TODO или закоммитьте с --no-verify"
+    exit 1
+fi
+
+echo "Pre-commit checks passed"
+exit 0
