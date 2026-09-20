@@ -9,8 +9,12 @@ from pydantic import BaseModel
 
 from model_loader import ModelLoader
 
-LOG_DIR = os.environ.get("LOG_DIR", "/app/logs")
-os.makedirs(LOG_DIR, exist_ok=True)
+LOG_DIR = os.environ.get("LOG_DIR", "/tmp/voiceapi_logs")
+try:
+    os.makedirs(LOG_DIR, exist_ok=True)
+except OSError:
+    LOG_DIR = "/tmp/voiceapi_logs"
+    os.makedirs(LOG_DIR, exist_ok=True)
 
 logger = logging.getLogger("voiceapi")
 logger.setLevel(logging.DEBUG)
