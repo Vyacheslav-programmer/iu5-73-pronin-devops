@@ -6,7 +6,6 @@ torchaudio==2.8.0
 transformers>=4
 hydra-core
 omegaconf
-pyannote.audio
 sentencepiece
 soundfile
 scipy
