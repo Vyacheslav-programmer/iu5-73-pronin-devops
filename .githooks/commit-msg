@@ -1,0 +1,13 @@
+#!/bin/bash
+MSG_FILE=$1
+MSG=$(head -1 "$MSG_FILE")
+
+if ! echo "$MSG" | grep -qE '^(feat|fix|docs|ci|chore|test|refactor):'; then
+    echo "Сообщение коммита должно начинаться с одного из префиксов:"
+    echo "  feat:, fix:, docs:, ci:, chore:, test:, refactor:"
+    echo "Получено: $MSG"
+    exit 1
+fi
+
+echo "commit-msg: формат OK"
+exit 0

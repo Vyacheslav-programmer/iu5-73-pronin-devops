@@ -6,3 +6,6 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 .env
+report.md
+security-bandit.json
+security-safety.json
