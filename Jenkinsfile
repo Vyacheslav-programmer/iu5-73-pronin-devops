@@ -30,7 +30,6 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh '''
-                    ${PYTHON} -m pip install --upgrade pip
                     ${PYTHON} -m pip install -r requirements.txt
                     ${PYTHON} -m pip install -r requirements-dev.txt
                 '''
