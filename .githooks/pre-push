@@ -1,0 +1,5 @@
+#!/bin/sh
+# Семинар 2: Git hook — не пушить, если тесты падают.
+set -e
+python -m pytest tests/ -q --tb=line
+echo "pre-push: pytest OK"

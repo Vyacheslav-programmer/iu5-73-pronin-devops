@@ -2,36 +2,56 @@
 
 Лабораторная работа по курсу «Автоматизация развёртывания и эксплуатации ПО».
 
-**Студент:** Пронин Вячеслав Константинович
-**Группа:** ИУ5Ц-93Б
-**Вариант:** 15
+**Студент:** Пронин Вячеслав Константинович  
+**Группа:** ИУ5Ц-93Б  
+**Вариант:** 15  
 **Преподаватель:** Балашов А.М.
 
-## Описание
+Remote Сферы: https://gateway-bmstu.saas.sferaplatform.ru/app/sourcecode/api/stud.iu5/IU5-73_Pronin.git
 
-В этом репозитории выполняются задания по модулю 1 «Работа с исходным кодом».
+Текст для страницы знаний: [docs/knowledge.md](docs/knowledge.md)
 
-**Вариант 15:** Проектирование GitHub Actions workflow.
+## Задачи семинара 1 и семинара 2
 
-## Структура проекта
+### Семинар 1. Работа с репозиторием Git
 
-- `README.md` — описание проекта
-- `server.py` — пример Python-приложения
-- `requirements.txt` — основные зависимости
-- `requirements-dev.txt` — зависимости для разработки
-- `pyproject.toml` — настройки pytest
-- `conftest.py` — настройка sys.path для тестов
-- `tests/test_server.py` — тесты
-- `.github/workflows/ci.yml` — CI/CD пайплайн для GitHub Actions
+Повторены операции из семинара (clone/add/commit/push, структура проекта, ветка `main`/`master`).
 
-## CI/CD
+Проект: `server.py`, тесты `tests/`, зависимости `requirements.txt` / `requirements-dev.txt`.
 
-Проект использует GitHub Actions для автоматической проверки кода.
+### Семинар 2. Hooks и CI (Jenkins)
 
-Пайплайн запускается при `push` и `pull_request` в ветку `main` и выполняет:
-1. Checkout — клонирование репозитория
-2. Setup Python — установка Python 3.11
-3. Install dependencies — установка зависимостей
-4. Compilation Check — синтаксическая проверка
-5. Linting — проверка через ruff
-6. Tests — запуск pytest
+Git hooks в `.githooks/`:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+- `pre-commit` — compileall + ruff
+- `pre-push` — pytest
+
+Jenkins: корневой `Jenkinsfile`, те же стадии, что и GitHub Actions.
+
+Подключение в Jenkins: New Item → Pipeline → Pipeline from SCM → Git (URL репозитория Сферы) → Script Path = `Jenkinsfile`.
+
+## Задание по варианту
+
+**Вариант 15.** GitHub Actions workflow `.github/workflows/ci.yml`
+
+- триггеры: `push` и `pull_request` в `main`;
+- шаги совпадают с Jenkins: Checkout → Setup Python 3.11 → Install dependencies → Compilation Check → Linting → Tests.
+
+## Дополнительное задание
+
+Не выполнялось.
+
+## Структура
+
+| Файл | Назначение |
+| --- | --- |
+| `server.py` | учебное Python-приложение |
+| `tests/test_server.py` | pytest |
+| `Jenkinsfile` | CI в Jenkins (семинар) |
+| `.github/workflows/ci.yml` | CI в GitHub Actions (вариант 15) |
+| `.githooks/` | pre-commit / pre-push |
+| `docs/knowledge.md` | текст для Сферы → Знания |

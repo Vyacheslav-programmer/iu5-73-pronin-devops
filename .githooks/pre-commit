@@ -1,0 +1,6 @@
+#!/bin/sh
+# Семинар 2: Git hook — проверка перед коммитом.
+set -e
+python -m compileall server.py
+python -m ruff check .
+echo "pre-commit: compileall + ruff OK"
